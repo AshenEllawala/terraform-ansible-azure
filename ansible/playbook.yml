@@ -1,0 +1,42 @@
+---
+- name: Configure webserver
+  hosts: webservers
+  become: true          # ← this means "use sudo"
+
+  tasks:
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        # hint: look for "update_cache" parameter
+        update_cache: yes
+
+    - name: Install Nginx
+      ansible.builtin.apt:
+        # hint: "name" and "state" parameters
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx
+      ansible.builtin.service:
+        # hint: "name", "state", "enabled" parameters
+        name: nginx
+        state: started
+        enabled: yes  
+
+    - name: Create a new user
+      ansible.builtin.user:
+        # hint: "name", "groups", "shell" parameters
+        # add the user to "sudo" group
+        name: deployer
+        groups: sudo
+        shell: /bin/bash
+        append: yes
+
+    - name: Deploy website
+      ansible.builtin.copy:
+        # hint: "src", "dest", "owner", "mode" parameters
+        # dest should be /var/www/html/index.html
+        src: files/index.html
+        dest: /var/www/html/index.html
+        owner: deployer
+        mode: '0644'

@@ -1,0 +1,14 @@
+# Terraform sensitive files
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/.terraform.lock.hcl
+terraform/terraform.tfvars        # ← has your project values
+
+# SSH keys — never push these
+*.pem
+*.pub
+~/.ssh/
+
+# Ansible inventory has your real IP
+ansible/inventory.ini
